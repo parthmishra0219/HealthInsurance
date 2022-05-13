@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;admin1&apos; in &apos;com.cg.health.controller.PolicyPurchaseController.getAdminById(...)&apos; to &apos;policyPurchase1&apos;&#x0D;&#x0A;- Original project: &apos;HealthInsurance&apos;&#x0D;&#x0A;- Original element: &apos;com.cg.health.controller.PolicyPurchaseController.getAdminById(int).admin1&apos;&#x0D;&#x0A;- Renamed element: &apos;admin1&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;admin1&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.cg.health.controller{PolicyPurchaseController.java[PolicyPurchaseController~getAdminById~I@admin1!2047!2099!2062!2067!QPolicyPurchase;!0!false" name="policyPurchase1" references="true" stamp="1648879114919" version="1.0"/>
+</session>

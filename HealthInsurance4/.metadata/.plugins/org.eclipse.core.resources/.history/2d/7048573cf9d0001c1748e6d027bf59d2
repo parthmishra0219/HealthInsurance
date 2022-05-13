@@ -1,0 +1,122 @@
+package com.cg.health.service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cg.health.dao.PolicyDao;
+import com.cg.health.dao.PolicyPurchaseDao;
+import com.cg.health.dao.PolicyUserDao;
+import com.cg.health.entities.Policy;
+import com.cg.health.entities.PolicyPurchase;
+import com.cg.health.entities.PolicyUser;
+import com.cg.health.exception.PolicyNotFoundException;
+import com.cg.health.exception.PolicyPurchaseAlreadyExistsException;
+import com.cg.health.exception.PolicyPurchaseNotFoundException;
+import com.cg.health.exception.PolicyUserNotFoundException;
+
+@Service
+public class PolicyPurchaseServiceImpl implements PolicyPurchaseService {
+
+	@Autowired
+	private PolicyPurchaseDao policyPurchaseDao;
+	@Autowired
+	private PolicyDao policyDao;
+	@Autowired
+	private PolicyUserDao userDao;
+
+	@Override
+	public PolicyPurchase addPolicyPurchase(int policyId, int userId, int policyPurchaseDuration)
+			throws PolicyPurchaseAlreadyExistsException {
+		Optional<Policy> optionalPolicy = policyDao.findById(policyId);
+		Optional<PolicyUser> optionalPolicyUser = userDao.findById(userId);
+		if (optionalPolicy.isEmpty()) {
+			throw new PolicyNotFoundException();
+		}
+
+		if (optionalPolicyUser.isEmpty()) {
+			throw new PolicyUserNotFoundException();
+		}
+		Policy policy = optionalPolicy.get();
+		PolicyUser policyUser = optionalPolicyUser.get();
+
+		PolicyPurchase policyPurchase = new PolicyPurchase();
+		policyPurchase.setPurchaseDate(LocalDate.now());
+
+		policyPurchase.setPolicyPuchaseDuration(policyPurchaseDuration);
+		policyPurchase.setPurchaseEndDate(LocalDate.now().plusYears(policyPurchase.getPolicyPuchaseDuration()));
+
+		policyPurchase.setPolicy(policy);
+		policyPurchase.setPolicyUser(policyUser);
+		int age = LocalDate.now().getYear() - policyUser.getDob().getYear();
+		float payingTerm = policyPurchase.getPolicyPuchaseDuration();
+		double sumAssured = policy.getPolicyCost();
+		//float policyTerm = policy.getPolicyDurationInYear();
+		double primiumAmount = calculatePrimium(age, payingTerm, sumAssured);
+		policyPurchase.setPremiumAmount(primiumAmount);
+
+		PolicyPurchase savedPolicyPurchase = policyPurchaseDao.save(policyPurchase);
+		return savedPolicyPurchase;
+
+	}
+
+	@Override
+	public Optional<PolicyPurchase> getPolicyPurchaseUserById(long policyPurchaseUserId)
+			throws PolicyPurchaseNotFoundException {
+
+		PolicyPurchase policyPurchase;
+		if (policyPurchaseDao.findById(policyPurchaseUserId).isEmpty()) {
+			throw new PolicyPurchaseNotFoundException();
+		} else {
+			policyPurchase = policyPurchaseDao.findById(policyPurchaseUserId).get();
+		}
+		return Optional.of(policyPurchase);
+	}
+
+	@Override
+	public double calculatePrimium(int age, float payingTerm, double sumAssured) {
+		double primium = 1;
+		if (age <= 18) {
+			primium = (sumAssured / (payingTerm * 12)) * 1.1;
+		}
+
+		else if (age <= 30) {
+			primium = (sumAssured / (payingTerm * 12)) * 1.2;
+		} else if (age <= 50) {
+			primium = (sumAssured / (payingTerm * 12)) * 1.4;
+		} else if (age <= 100) {
+			primium = (sumAssured / (payingTerm * 12)) * 1.6;
+		}
+
+		return primium;
+	}
+
+	@Override
+	public List<PolicyPurchase> getPolicyPurchase() throws PolicyPurchaseNotFoundException {
+
+		return policyPurchaseDao.findAll();
+	}
+
+	@Override
+	public String deletePolicyPurchaseById(int policyPurchaseId) {
+
+		policyPurchaseDao.deleteById((long) policyPurchaseId);
+
+		return " Policy Deleted";
+	}
+
+	@Override
+	public PolicyPurchase updatePolicyPurchase(PolicyPurchase policyPurchase1) {
+		
+		return policyPurchaseDao.save(policyPurchase1);
+	}
+
+	
+
+	
+
+	
+}

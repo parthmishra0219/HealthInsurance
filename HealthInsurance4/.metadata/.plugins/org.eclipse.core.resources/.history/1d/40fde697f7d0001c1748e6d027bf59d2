@@ -1,0 +1,34 @@
+package com.cg.health.service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import com.cg.health.entities.PolicyPurchase;
+import com.cg.health.exception.PolicyPurchaseAlreadyExistsException;
+import com.cg.health.exception.PolicyPurchaseNotFoundException;
+
+public interface PolicyPurchaseService {
+
+	public List<PolicyPurchase> getPolicyPurchase() throws PolicyPurchaseNotFoundException; 
+		
+	
+
+	public PolicyPurchase addPolicyPurchase(int policyId,int userId,int policyPurchaseDuration) throws PolicyPurchaseAlreadyExistsException;
+
+
+
+	public Optional<PolicyPurchase> getPolicyPurchaseUserById(long policyPurchaseUserId) throws PolicyPurchaseNotFoundException; 
+
+	public double calculatePrimium(int age,float payingTerm,double sumAssured);
+
+
+
+	public String deletePolicyPurchaseById(int policyPurchaseId);
+
+
+
+
+	public PolicyPurchase updatePolicyPurchase(int policyPurchaseId, int policyPurchaseDuration,
+			LocalDate purchaseDate);
+}

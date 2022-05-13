@@ -1,0 +1,31 @@
+package com.cg.health.model;
+
+import java.time.LocalDate;
+
+public class PolicyPurchaseUpdate {
+	
+	
+	private int policyPurchaseId;
+	public int getPolicyPurchaseId() {
+		return policyPurchaseId;
+	}
+	public void setPolicyPurchaseId(int policyPurchaseId) {
+		this.policyPurchaseId = policyPurchaseId;
+	}
+	private int policyPurchaseDuration;
+	private LocalDate purchaseDate;
+	
+	public int getPolicyPurchaseDuration() {
+		return policyPurchaseDuration;
+	}
+	public void setPolicyPurchaseDuration(int policyPurchaseDuration) {
+		this.policyPurchaseDuration = policyPurchaseDuration;
+	}
+	public LocalDate getPurchaseDate() {
+		return purchaseDate;
+	}
+	public void setPurchaseDate(LocalDate purchaseDate) {
+		this.purchaseDate = purchaseDate;
+	}
+
+}
